@@ -1,5 +1,5 @@
 ################################################################################
-GITHUB_REPOSITORY = 'sharkone/BitTorrent.bundle'
+GITHUB_REPOSITORY = 'gprime44/BitTorrent.bundle'
 
 ################################################################################
 def get_latest_version():

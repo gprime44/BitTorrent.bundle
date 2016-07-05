@@ -111,7 +111,7 @@ def movie_menu(title, trakt_slug):
             movie_object = MovieObject()
             SharedCodeService.common.fill_movie_object(movie_object, json_data)
             movie_object.title   = json_item['title']
-            movie_object.summary = 'Seeds: {0} - Peers: {1}\nSize: {2}\nSource: {3}\n\n{4}'.format(json_item['seeds'], json_item['peers'], SharedCodeService.utils.get_magnet_size_str(json_item), json_item['source'], movie_object.summary)
+            movie_object.summary = 'Seeds: {0} - Peers: {1}</br>Size: {2}</br>Source: {3}</br></br>{4}'.format(json_item['seeds'], json_item['peers'], SharedCodeService.utils.get_magnet_size_str(json_item), json_item['source'], movie_object.summary)
             movie_object.url     = json_url + '?magnet=' + String.Quote(json_item['link'])
             object_container.add(movie_object)
 
