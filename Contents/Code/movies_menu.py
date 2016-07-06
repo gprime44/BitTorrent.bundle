@@ -17,6 +17,7 @@ def menu():
         DumbKeyboard(SharedCodeService.common.PREFIX + '/' + SUBPREFIX, object_container, search_menu, dktitle='Search', dkthumb=R('search.png'), title='Search')
     else:
         object_container.add(InputDirectoryObject(key=Callback(search_menu, title='Search'), title='Search', summary='Search movies', thumb=R('search.png'), prompt='Search for movies'))
+        
     return object_container
 
 ################################################################################
@@ -29,7 +30,7 @@ def movies_menu(title, page, page_index):
 
     if json_data and 'movies' in json_data:
         for json_item in json_data['movies']:
-            directory_object          = DirectoryObject()
+            directory_object          = VideoClipObject()
             directory_object.title    = json_item['title']
             directory_object.summary  = json_item['overview']
             directory_object.tagline  = json_item['tagline']
@@ -110,8 +111,8 @@ def movie_menu(title, trakt_slug):
         for json_item in json_data['magnets']:
             movie_object = MovieObject()
             SharedCodeService.common.fill_movie_object(movie_object, json_data)
-            movie_object.title   = json_item['title']
-            movie_object.summary = 'Seeds: {0} - Peers: {1}</br>Size: {2}</br>Source: {3}</br></br>{4}'.format(json_item['seeds'], json_item['peers'], SharedCodeService.utils.get_magnet_size_str(json_item), json_item['source'], movie_object.summary)
+            movie_object.title   = json_item['title'] + ' - Seeds: {0} - Peers: {1} - Size: {2} - Source: {3}' 
+            movie_object.summary = '{4}'.format(json_item['seeds'], json_item['peers'], SharedCodeService.utils.get_magnet_size_str(json_item), json_item['source'], movie_object.summary)
             movie_object.url     = json_url + '?magnet=' + String.Quote(json_item['link'])
             object_container.add(movie_object)
 
