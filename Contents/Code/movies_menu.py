@@ -105,7 +105,7 @@ def movie_lang_menu(title, trakt_slug):
     return object_container
 
 ################################################################################
-@route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/movie', language=str)
+@route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/movie')
 def movie_menu(title, trakt_slug, language):
     object_container = ObjectContainer(title2=title)
 
