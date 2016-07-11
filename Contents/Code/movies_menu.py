@@ -13,16 +13,23 @@ def menu():
     object_container.add(DirectoryObject(key=Callback(movies_menu, title='Popular', page='/api/movies/popular', page_index=1), title='Popular', summary='Browse most popular movies.'))
     object_container.add(DirectoryObject(key=Callback(watchlist_menu, title='Watchlist'), title='Watchlist', summary='Browse your watchlist', thumb=R('favorites.png')))
 
+    addSearch(object_container)
+    
+    return object_container
+
+################################################################################
+def addSearch(object_container)
     if Client.Product in DumbKeyboard.clients:
         DumbKeyboard(SharedCodeService.common.PREFIX + '/' + SUBPREFIX, object_container, search_menu, dktitle='Search', dkthumb=R('search.png'), title='Search')
     else:
         object_container.add(InputDirectoryObject(key=Callback(search_menu, title='Search'), title='Search', summary='Search movies', thumb=R('search.png'), prompt='Search for movies'))
-    return object_container
-
+        
 ################################################################################
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/movies', page_index=int)
 def movies_menu(title, page, page_index):
     object_container = ObjectContainer(title2=title)
+    
+    addSearch(object_container)
 
     json_url  = Prefs['SCRAPYARD_URL'] + page + '?page={0}'.format(page_index)
     json_data = JSON.ObjectFromURL(json_url, cacheTime=CACHE_1HOUR)
@@ -50,6 +57,8 @@ def watchlist_menu(title):
     trakt_slugs = Dict['movies_watchlist'] if 'movies_watchlist' in Dict else []
 
     object_container = ObjectContainer(title2=title)
+    
+    addSearch(object_container)
 
     json_url  = Prefs['SCRAPYARD_URL'] + '/api/movies/watchlist?'
     json_post = { 'movies_watchlist': JSON.StringFromObject(trakt_slugs) }
@@ -75,6 +84,8 @@ def watchlist_menu(title):
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/search')
 def search_menu(title, query):
     object_container = ObjectContainer(title2=title)
+    
+    addSearch(object_container)
 
     json_url  = Prefs['SCRAPYARD_URL'] + '/api/movies/search?query=' + String.Quote(query)
     json_data = JSON.ObjectFromURL(json_url, cacheTime=CACHE_1HOUR)
@@ -97,6 +108,8 @@ def search_menu(title, query):
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/movie_lang')
 def movie_lang_menu(title, trakt_slug):
     object_container = ObjectContainer(title2=title)
+    
+    addSearch(object_container)
 
     object_container.add(DirectoryObject(title='VF', summary='Francais', key=Callback(movie_menu, title=title, trakt_slug=trakt_slug, language="FR")))
     object_container.add(DirectoryObject(title='VOSTR', summary='Anglais sous titre francais', key=Callback(movie_menu, title=title, trakt_slug=trakt_slug, language="VOSTR")))
@@ -108,6 +121,8 @@ def movie_lang_menu(title, trakt_slug):
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/movie')
 def movie_menu(title, trakt_slug, language):
     object_container = ObjectContainer(title2=title)
+    
+    addSearch(object_container)
 
     if 'movies_watchlist' in Dict and trakt_slug in Dict['movies_watchlist']:
         object_container.add(DirectoryObject(key=Callback(remove_from_watchlist, title='Remove from Watchlist', movie_title=title, trakt_slug=trakt_slug), title='Remove from Watchlist', summary='Remove movie from Watchlist', thumb=R('favorites.png')))

@@ -13,16 +13,23 @@ def menu():
     object_container.add(DirectoryObject(key=Callback(shows_menu, title='Popular', page='/api/shows/popular', page_index=1), title='Popular', summary='Browse most popular TV shows.'))
     object_container.add(DirectoryObject(key=Callback(favorites_menu, title='Favorites'), title='Favorites', summary='Browse your favorite TV shows', thumb=R('favorites.png')))
 
+    addSearch(object_container)
+    
+    return object_container
+
+################################################################################    
+def addSearch(object_container):
     if Client.Product in DumbKeyboard.clients:
         DumbKeyboard(SharedCodeService.common.PREFIX + '/' + SUBPREFIX, object_container, search_menu, dktitle='Search', dkthumb=R('search.png'), title='Search')
     else:
         object_container.add(InputDirectoryObject(key=Callback(search_menu, title='Search'), title='Search', summary='Search TV shows', thumb=R('search.png'), prompt='Search for TV shows'))
-    return object_container
 
 ################################################################################
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/shows', page_index=int)
 def shows_menu(title, page, page_index):
     object_container = ObjectContainer(title2=title)
+
+    addSearch(object_container)
 
     json_url  = Prefs['SCRAPYARD_URL'] + page + '?page={0}'.format(page_index)
     json_data = JSON.ObjectFromURL(json_url, cacheTime=CACHE_1HOUR)
@@ -67,6 +74,8 @@ def favorites_menu(title):
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/search')
 def search_menu(title, query):
     object_container = ObjectContainer(title2=title)
+    
+    addSearch(object_container)
 
     json_url  = Prefs['SCRAPYARD_URL'] + '/api/shows/search?query=' + String.Quote(query)
     json_data = JSON.ObjectFromURL(json_url, cacheTime=CACHE_1HOUR)
@@ -85,6 +94,8 @@ def search_menu(title, query):
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/tvshow')
 def show_menu(title, trakt_slug):
     object_container = ObjectContainer(title2=title)
+    
+    addSearch(object_container)
 
     if 'shows_favorites' in Dict and trakt_slug in Dict['shows_favorites']:
         object_container.add(DirectoryObject(key=Callback(remove_from_favorites, title='Remove from Favorites', show_title=title, trakt_slug=trakt_slug), title='Remove from Favorites', summary='Remove TV show from Favorites', thumb=R('favorites.png')))
@@ -135,6 +146,8 @@ def remove_from_favorites(title, show_title, trakt_slug):
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/season', season_index=int)
 def season_menu(title, show_title, trakt_slug, season_index):
     object_container = ObjectContainer(title2=title)
+    
+    addSearch(object_container)
 
     json_url  = Prefs['SCRAPYARD_URL'] + '/api/show/' + trakt_slug + '/season/' + str(season_index)
     json_data = JSON.ObjectFromURL(json_url, cacheTime=CACHE_1HOUR)
@@ -155,6 +168,9 @@ def season_menu(title, show_title, trakt_slug, season_index):
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/episode_lang', season_index=int, episode_index=int)
 def episode_lang_menu(show_title, trakt_slug, season_index, episode_index):
     object_container = ObjectContainer()
+    
+    addSearch(object_container)
+    
     object_container.add(DirectoryObject(title='VF', summary='Francais', key=Callback(episode_menu, show_title=show_title, trakt_slug=trakt_slug, season_index=season_index, episode_index=episode_index, language="FR")))
     object_container.add(DirectoryObject(title='VOSTR', summary='Anglais sous titre francais', key=Callback(episode_menu, show_title=show_title, trakt_slug=trakt_slug, season_index=season_index, episode_index=episode_index, language="VOSTFR")))
     object_container.add(DirectoryObject(title='VO', summary='Anglais', key=Callback(episode_menu, show_title=show_title, trakt_slug=trakt_slug, season_index=season_index, episode_index=episode_index, language="VO")))
@@ -165,6 +181,8 @@ def episode_lang_menu(show_title, trakt_slug, season_index, episode_index):
 @route(SharedCodeService.common.PREFIX + '/' + SUBPREFIX + '/episode', season_index=int, episode_index=int, language=str)
 def episode_menu(show_title, trakt_slug, season_index, episode_index, language):
     object_container = ObjectContainer()
+    
+    addSearch(object_container)
 
     json_url  = Prefs['SCRAPYARD_URL'] + '/api/show/' + trakt_slug + '/season/' + str(season_index) + '/episode/' + str(episode_index) + '/' + str(language)
     json_data = JSON.ObjectFromURL(json_url, cacheTime=CACHE_1HOUR)
