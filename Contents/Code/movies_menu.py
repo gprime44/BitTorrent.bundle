@@ -18,7 +18,7 @@ def menu():
     return object_container
 
 ################################################################################
-def addSearch(object_container)
+def addSearch(object_container):
     if Client.Product in DumbKeyboard.clients:
         DumbKeyboard(SharedCodeService.common.PREFIX + '/' + SUBPREFIX, object_container, search_menu, dktitle='Search', dkthumb=R('search.png'), title='Search')
     else:
